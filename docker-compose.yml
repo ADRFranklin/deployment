@@ -163,8 +163,6 @@ services:
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
-    ports:
-      - "80:3000"
     volumes:
       - "${DATA_DIR}/openmp/discourse:/bitnami"
     networks:
@@ -174,3 +172,8 @@ services:
       - mail
       - postgresql
       - redis
+    labels:
+      - traefik.docker.network=gateway
+      - "traefik.frontend.rule=Host:forum.southcla.ws"
+      - traefik.frontend.headers.SSLRedirect=true
+      - traefik.port=3000
