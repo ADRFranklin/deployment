@@ -11,7 +11,7 @@ INFO=$(docker ps \
 
 IMAGE_NAME=$(echo $INFO | awk '{print $1}')
 CONTAINER_NAME=$(echo $INFO | awk '{print $2}')
-DEFAULT_CONFIG_PATH="$(pwd)/config"
+DEFAULT_CONFIG_PATH="/data/openmp/mailconfig"
 
 _update_config_path() {
 	VOLUME=$(docker inspect $CONTAINER_NAME \

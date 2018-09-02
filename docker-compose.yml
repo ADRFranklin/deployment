@@ -65,7 +65,7 @@ services:
     volumes:
       - ${DATA_DIR}/openmp/maildata:/var/mail
       - ${DATA_DIR}/openmp/mailstate:/var/mail-state
-      - ./config/:/tmp/docker-mailserver/
+      - ${DATA_DIR}/openmp/mailconfig/:/tmp/docker-mailserver/
     environment:
       OVERRIDE_HOSTNAME: forum.southcla.ws
       DMS_DEBUG: "0"
