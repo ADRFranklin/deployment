@@ -18,8 +18,6 @@ services:
       - "${DATA_DIR}/openmp/postgresql:/bitnami"
     networks:
       - databases
-    depends_on:
-      - fix-postgresql-permissions
 
   redis:
     image: "bitnami/redis:latest"
@@ -33,8 +31,6 @@ services:
       - "${DATA_DIR}/openmp/redis:/bitnami"
     networks:
       - databases
-    depends_on:
-      - fix-redis-permissions
 
   sidekiq:
     image: "bitnami/discourse:latest"
