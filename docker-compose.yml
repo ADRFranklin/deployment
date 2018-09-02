@@ -15,6 +15,12 @@ services:
     command: chown -R 1001:1001 /bitnami
     volumes:
       - "${DATA_DIR}/openmp/postgresql:/bitnami"
+  fix-redis-permissions:
+    image: "bitnami/redis:latest"
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - "${DATA_DIR}/openmp/redis:/bitnami"
 
   postgresql:
     image: "bitnami/postgresql:latest"
@@ -40,6 +46,8 @@ services:
       - "${DATA_DIR}/openmp/redis:/bitnami"
     networks:
       - databases
+    depends_on:
+      - fix-redis-permissions
 
   sidekiq:
     image: "bitnami/discourse:latest"
