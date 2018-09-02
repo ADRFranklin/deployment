@@ -9,6 +9,13 @@ networks:
     internal: true
 
 services:
+  fix-postgresql-permissions:
+    image: "bitnami/postgresql:latest"
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - "${DATA_DIR}/openmp/postgresql:/bitnami"
+
   postgresql:
     image: "bitnami/postgresql:latest"
     environment:
@@ -18,6 +25,8 @@ services:
       - "${DATA_DIR}/openmp/postgresql:/bitnami"
     networks:
       - databases
+    depends_on:
+      - fix-postgresql-permissions
 
   redis:
     image: "bitnami/redis:latest"
