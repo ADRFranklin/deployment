@@ -48,7 +48,7 @@ services:
       SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
       SMTP_PORT: "25" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
-      # SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
     volumes:
       - "${DATA_DIR}/openmp/sidekiq:/bitnami"
@@ -134,7 +134,7 @@ services:
       SMTP_HOST: mail # Host for outgoing SMTP email.
       SMTP_PORT: "25" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
-      # SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
     volumes:
       - "${DATA_DIR}/openmp/discourse:/bitnami"
