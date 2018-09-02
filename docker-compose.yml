@@ -1,49 +1,70 @@
 version: "3.5"
 
+networks:
+  default:
+    external:
+      name: gateway
+  databases:
+    driver: bridge
+    internal: true
+
 services:
   postgresql:
     image: "bitnami/postgresql:latest"
+    environment:
+      POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS}
+      POSTGRESQL_DATABASE: discourse
     volumes:
       - "${DATA_DIR}/openmp/postgresql:/bitnami"
+    networks:
+      - databases
 
   redis:
     image: "bitnami/redis:latest"
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      ALLOW_EMPTY_PASSWORD: "no"
+      DISABLE_COMMANDS: "FLUSHDB,FLUSHALL,CONFIG"
+      REDIS_HOST: redis # Hostname for Redis.
+      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
     volumes:
       - "${DATA_DIR}/openmp/redis:/bitnami"
-
-  discourse:
-    image: "bitnami/discourse:latest"
-    ports:
-      - "80:3000"
-    volumes:
-      - "${DATA_DIR}/openmp/discourse:/bitnami"
-    depends_on:
-      - postgresql
-      - redis
+    networks:
+      - databases
 
   sidekiq:
     image: "bitnami/discourse:latest"
-    depends_on:
-      - discourse
+    command: "nami start --foreground discourse-sidekiq"
+    environment:
+      DISCOURSE_POSTGRESQL_NAME: discourse
+      DISCOURSE_POSTGRESQL_USERNAME: postgres
+      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS}
+      DISCOURSE_HOST: discourse
+      DISCOURSE_PORT: 3000
+      DISCOURSE_HOSTNAME: forum.southcla.ws
+      REDIS_HOST: redis # Hostname for Redis.
+      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
     volumes:
       - "${DATA_DIR}/openmp/sidekiq:/bitnami"
-    command: "nami start --foreground discourse-sidekiq"
+    networks:
+      - databases
+    depends_on:
+      - discourse
 
   mail:
     image: tvial/docker-mailserver:latest
-    hostname: ${HOSTNAME}
-    domainname: ${DOMAINNAME}
-    container_name: ${CONTAINER_NAME}
+    hostname: mail
+    domainname: forum.southcla.ws
+    container_name: mail
     ports:
       - "25:25"
       - "143:143"
       - "587:587"
       - "993:993"
     volumes:
-      - maildata:/var/mail
-      - mailstate:/var/mail-state
+      - ${DATA_DIR}/openmp/maildata:/var/mail
+      - ${DATA_DIR}/openmp/mailstate:/var/mail-state
       - ./config/:/tmp/docker-mailserver/
     environment:
       - DMS_DEBUG=${DMS_DEBUG}
@@ -112,8 +133,44 @@ services:
       - NET_ADMIN
       - SYS_PTRACE
     restart: always
-volumes:
-  maildata:
-    driver: local
-  mailstate:
-    driver: local
+    networks:
+      - default
+      - databases
+
+  discourse:
+    image: "bitnami/discourse:latest"
+    environment:
+      DISCOURSE_USERNAME: root # Discourse application username.
+      DISCOURSE_PASSWORD: ${DISCOURSE_ROOT_PASS} # Discourse application password.
+      DISCOURSE_EMAIL: admin@southcla.ws # Discourse application email.
+      DISCOURSE_SITENAME: Southclaws # Discourse site name.
+      DISCOURSE_HOSTNAME: forum.southcla.ws # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
+      POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
+      POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
+      POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
+      POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
+      DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
+      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS} # Discourse application database password. bitnami1
+      DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
+      POSTGRESQL_CLIENT_CREATE_DATABASE_NAME: discourse # unknown...
+      POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME: discourse # unknown...
+      POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD: ${DISCOURSE_PG_PASS} # unknown...
+      REDIS_HOST: redis # Hostname for Redis.
+      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
+      SMTP_HOST: mail # Host for outgoing SMTP email.
+      SMTP_PORT: "587" # Port for outgoing SMTP email.
+      SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
+      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+      SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
+    ports:
+      - "80:3000"
+    volumes:
+      - "${DATA_DIR}/openmp/discourse:/bitnami"
+    networks:
+      - default
+      - databases
+    depends_on:
+      - mail
+      - postgresql
+      - redis
