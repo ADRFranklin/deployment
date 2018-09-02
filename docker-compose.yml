@@ -49,7 +49,7 @@ services:
       SMTP_PORT: "587" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
+      SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
     volumes:
       - "${DATA_DIR}/openmp/sidekiq:/bitnami"
     networks:
@@ -127,7 +127,7 @@ services:
       SMTP_PORT: "587" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
+      SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
     volumes:
       - "${DATA_DIR}/openmp/discourse:/bitnami"
     networks:
