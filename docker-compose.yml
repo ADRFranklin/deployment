@@ -45,10 +45,10 @@ services:
       REDIS_HOST: redis # Hostname for Redis.
       REDIS_PORT_NUMBER: "6379" # Port used by Redis.
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-      SMTP_HOST: mail # Host for outgoing SMTP email.
-      SMTP_PORT: "587" # Port for outgoing SMTP email.
+      SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
+      SMTP_PORT: "25" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
-      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
     volumes:
       - "${DATA_DIR}/openmp/sidekiq:/bitnami"
@@ -62,10 +62,10 @@ services:
     hostname: mail
     domainname: forum.southcla.ws
     ports:
-      - "25:25"
-      - "143:143"
-      - "587:587"
-      - "993:993"
+      - "25:25" # receiving email from other mailservers
+      - "143:143" # StartTLS IMAP client
+      - "587:587" # TLS Client email submission
+      - "993:993" # TLS/SSL IMAP client
     volumes:
       - ${DATA_DIR}/openmp/maildata:/var/mail
       - ${DATA_DIR}/openmp/mailstate:/var/mail-state
@@ -124,7 +124,7 @@ services:
       REDIS_PORT_NUMBER: "6379" # Port used by Redis.
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
       SMTP_HOST: mail # Host for outgoing SMTP email.
-      SMTP_PORT: "587" # Port for outgoing SMTP email.
+      SMTP_PORT: "25" # Port for outgoing SMTP email.
       SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
