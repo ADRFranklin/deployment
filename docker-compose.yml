@@ -56,7 +56,6 @@ services:
     image: tvial/docker-mailserver:latest
     hostname: mail
     domainname: forum.southcla.ws
-    container_name: mail
     ports:
       - "25:25"
       - "143:143"
