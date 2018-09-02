@@ -107,6 +107,7 @@ services:
     environment:
       MAILNAME: forum.southcla.ws
     networks:
+      - default
       - databases
 
   discourse:
