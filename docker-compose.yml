@@ -12,7 +12,7 @@ services:
   flarum:
     image: mondedie/docker-flarum:0.1.0-beta.7.1-stable
     environment:
-      FORUM_URL: http://localhost
+      FORUM_URL: https://tanuki.southcla.ws
       DB_PASS: ${MARIA_PASSWORD}
       LOG_TO_STDOUT: "true"
       DEBUG: "true"
