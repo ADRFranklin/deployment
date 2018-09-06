@@ -1,5 +1,13 @@
 version: "3.5"
 
+networks:
+  default:
+    external:
+      name: gateway
+  databases:
+    driver: bridge
+    internal: true
+
 services:
   flarum:
     image: mondedie/docker-flarum:0.1.0-beta.7.1-stable
@@ -13,6 +21,9 @@ services:
       - ${DATA_DIR}/openmp/flarum/extensions:/flarum/app/extensions
     ports:
       - 8888:8888
+    networks:
+      - default
+      - databases
     depends_on:
       - mariadb
     labels:
@@ -30,5 +41,7 @@ services:
       MYSQL_PASSWORD: ${MARIA_PASSWORD}
     volumes:
       - ${DATA_DIR}/openmp/mysql/db:/var/lib/mysql
+    networks:
+      - databases
     labels:
       - traefik.enable=false
