@@ -1,141 +1,34 @@
 version: "3.5"
 
-networks:
-  default:
-    external:
-      name: gateway
-  databases:
-    driver: bridge
-    internal: true
-
 services:
-  postgresql:
-    image: "bitnami/postgresql:latest"
-    restart: on-failure
+  flarum:
+    image: mondedie/docker-flarum:0.1.0-beta.7.1-stable
     environment:
-      POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS}
-      POSTGRESQL_DATABASE: discourse
+      FORUM_URL: http://localhost
+      DB_PASS: ${MARIA_PASSWORD}
+      LOG_TO_STDOUT: "true"
+      DEBUG: "true"
     volumes:
-      - "${DATA_DIR}/openmp/postgresql:/bitnami"
-    networks:
-      - databases
-    labels:
-      - traefik.enable=false
-
-  redis:
-    image: "bitnami/redis:latest"
-    restart: on-failure
-    environment:
-      ALLOW_EMPTY_PASSWORD: "no"
-      DISABLE_COMMANDS: "FLUSHDB,FLUSHALL,CONFIG"
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-    volumes:
-      - "${DATA_DIR}/openmp/redis:/bitnami"
-    networks:
-      - databases
-    labels:
-      - traefik.enable=false
-
-  sidekiq:
-    image: "bitnami/discourse:latest"
-    command: "nami start --foreground discourse-sidekiq"
-    restart: on-failure
-    environment:
-      DISCOURSE_POSTGRESQL_NAME: discourse
-      DISCOURSE_POSTGRESQL_USERNAME: discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS}
-      DISCOURSE_HOST: discourse
-      DISCOURSE_PORT: 3000
-      DISCOURSE_HOSTNAME: forum.southcla.ws
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-      SMTP_HOST: mail # Host for outgoing SMTP email.
-      SMTP_PORT: "25" # Port for outgoing SMTP email.
-      SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
-      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
-    volumes:
-      - "${DATA_DIR}/openmp/sidekiq:/bitnami"
-    networks:
-      - databases
-    depends_on:
-      - discourse
-    labels:
-      - traefik.enable=false
-
-  mail:
-    image: tvial/docker-mailserver:latest
-    hostname: mail
-    domainname: forum.southcla.ws
-    restart: on-failure
+      - ${DATA_DIR}/openmp/flarum/assets:/flarum/app/assets
+      - ${DATA_DIR}/openmp/flarum/extensions:/flarum/app/extensions
     ports:
-      - "25:25" # receiving email from other mailservers
-      - "143:143" # StartTLS IMAP client
-      - "587:587" # TLS Client email submission
-      - "993:993" # TLS/SSL IMAP client
-    environment:
-      OVERRIDE_HOSTNAME: forum.southcla.ws
-      DMS_DEBUG: "1"
-      SMTP_ONLY: "0"
-      SSL_TYPE: ""
-      ENABLE_FAIL2BAN: "1"
-      PERMIT_DOCKER: network
-    volumes:
-      - ${DATA_DIR}/openmp/maildata:/var/mail
-      - ${DATA_DIR}/openmp/mailstate:/var/mail-state
-      - ${DATA_DIR}/openmp/mailconfig/:/tmp/docker-mailserver/
-    cap_add:
-      - NET_ADMIN
-      - SYS_PTRACE
-    networks:
-      - default
-      - databases
-    labels:
-      - traefik.enable=false
-
-  discourse:
-    image: "bitnami/discourse:latest"
-    restart: on-failure
-    environment:
-      DISCOURSE_USERNAME: root # Discourse application username.
-      DISCOURSE_PASSWORD: ${DISCOURSE_ROOT_PASS} # Discourse application password.
-      DISCOURSE_EMAIL: admin@forum.southcla.ws # Discourse application email.
-      DISCOURSE_SITENAME: Southclaws # Discourse site name.
-      DISCOURSE_HOSTNAME: forum.southcla.ws # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
-      POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
-      POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
-      POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
-      POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
-      DISCOURSE_POSTGRESQL_USERNAME: discourse # Discourse application database user. bn_discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS} # Discourse application database password. bitnami1
-      DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
-      POSTGRESQL_CLIENT_CREATE_DATABASE_NAME: discourse # unknown...
-      POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME: discourse # unknown...
-      POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD: ${DISCOURSE_PG_PASS} # unknown...
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-      SMTP_HOST: mail # Host for outgoing SMTP email.
-      SMTP_PORT: "25" # Port for outgoing SMTP email.
-      SMTP_USER: admin@forum.southcla.ws # User of SMTP used for authentication (likely email).
-      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "false" # Whether use TLS protocol for SMTP or not.
-    volumes:
-      - "${DATA_DIR}/openmp/discourse:/bitnami"
-    networks:
-      - default
-      - databases
+      - 8888:8888
     depends_on:
-      - mail
-      - postgresql
-      - redis
-    # ports:
-    #   - 80:3000
+      - mariadb
     labels:
       - traefik.docker.network=gateway
-      - "traefik.frontend.rule=Host:forum.southcla.ws"
+      - "traefik.frontend.rule=Host:tanuki.southcla.ws"
       - traefik.frontend.headers.SSLRedirect=true
-      - traefik.port=3000
+      - traefik.port=8888
+
+  mariadb:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIA_ROOT_PASSWORD}
+      MYSQL_DATABASE: flarum
+      MYSQL_USER: flarum
+      MYSQL_PASSWORD: ${MARIA_PASSWORD}
+    volumes:
+      - ${DATA_DIR}/openmp/mysql/db:/var/lib/mysql
+    labels:
+      - traefik.enable=false
