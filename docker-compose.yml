@@ -141,5 +141,5 @@ services:
     labels:
       - traefik.docker.network=gateway
       - "traefik.frontend.rule=Host:burgershot.gg"
-      - traefik.frontend.headers.SSLRedirect=true
+      - traefik.frontend.headers.SSLRedirect=false
       - traefik.port=3000
