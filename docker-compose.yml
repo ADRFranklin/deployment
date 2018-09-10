@@ -43,9 +43,13 @@ services:
     command: "nami start --foreground discourse-sidekiq"
     restart: on-failure
     environment:
-      DISCOURSE_POSTGRESQL_NAME: discourse
-      DISCOURSE_POSTGRESQL_USERNAME: discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS}
+      POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
+      POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
+      POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
+      POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
+      DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
+      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
+      DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
       DISCOURSE_HOST: discourse
       DISCOURSE_PORT: 3000
       DISCOURSE_HOSTNAME: burgershot.gg
@@ -109,12 +113,12 @@ services:
       POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
       POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
       POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
-      DISCOURSE_POSTGRESQL_USERNAME: discourse # Discourse application database user. bn_discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_PASS} # Discourse application database password. bitnami1
+      DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
+      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
       DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
-      POSTGRESQL_CLIENT_CREATE_DATABASE_NAME: discourse # unknown...
-      POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME: discourse # unknown...
-      POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD: ${DISCOURSE_PG_PASS} # unknown...
+      # POSTGRESQL_CLIENT_CREATE_DATABASE_NAME: discourse # unknown...
+      # POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME: discourse # unknown...
+      # POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD: ${DISCOURSE_PG_PASS} # unknown...
       REDIS_HOST: redis # Hostname for Redis.
       REDIS_PORT_NUMBER: "6379" # Port used by Redis.
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
