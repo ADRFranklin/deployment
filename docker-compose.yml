@@ -39,7 +39,7 @@ services:
       - traefik.enable=false
 
   sidekiq:
-    image: "bitnami/discourse:latest"
+    image: "bitnami/discourse:2.0.5"
     command: "nami start --foreground discourse-sidekiq"
     restart: on-failure
     environment:
@@ -101,7 +101,7 @@ services:
       - traefik.enable=false
 
   discourse:
-    image: "bitnami/discourse:latest"
+    image: "bitnami/discourse:2.0.5"
     restart: on-failure
     environment:
       DISCOURSE_USERNAME: root # Discourse application username.
