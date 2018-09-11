@@ -52,7 +52,7 @@ services:
       DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
       DISCOURSE_HOST: discourse
       DISCOURSE_PORT: 3000
-      DISCOURSE_HOSTNAME: burgershot.gg
+      DISCOURSE_HOSTNAME: forum.southcla.ws
       REDIS_HOST: redis # Hostname for Redis.
       REDIS_PORT_NUMBER: "6379" # Port used by Redis.
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
@@ -76,9 +76,9 @@ services:
     environment:
       DISCOURSE_USERNAME: root # Discourse application username.
       DISCOURSE_PASSWORD: ${DISCOURSE_ROOT_PASS} # Discourse application password.
-      DISCOURSE_EMAIL: admin@burgershot.gg # Discourse application email.
+      DISCOURSE_EMAIL: admin@southcla.ws # Discourse application email.
       DISCOURSE_SITENAME: Burger Shot # Discourse site name.
-      DISCOURSE_HOSTNAME: burgershot.gg # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
+      DISCOURSE_HOSTNAME: forum.southcla.ws # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
       POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
       POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
       POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
@@ -106,6 +106,6 @@ services:
     #   - 80:3000
     labels:
       - traefik.docker.network=gateway
-      - "traefik.frontend.rule=Host:burgershot.gg"
+      - "traefik.frontend.rule=Host:forum.southcla.ws"
       - traefik.frontend.headers.SSLRedirect=false
       - traefik.port=3000
