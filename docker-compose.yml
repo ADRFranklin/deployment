@@ -86,9 +86,6 @@ services:
       DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
       DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
       DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
-      # POSTGRESQL_CLIENT_CREATE_DATABASE_NAME: discourse # unknown...
-      # POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME: discourse # unknown...
-      # POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD: ${DISCOURSE_PG_PASS} # unknown...
       REDIS_HOST: redis # Hostname for Redis.
       REDIS_PORT_NUMBER: "6379" # Port used by Redis.
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
@@ -110,5 +107,5 @@ services:
     labels:
       - traefik.docker.network=gateway
       - "traefik.frontend.rule=Host:burgershot.gg"
-      - traefik.frontend.headers.SSLRedirect=true
+      - traefik.frontend.headers.SSLRedirect=false
       - traefik.port=3000
