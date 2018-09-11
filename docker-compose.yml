@@ -58,7 +58,7 @@ services:
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
       SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
       SMTP_PORT: "2525" # Port for outgoing SMTP email.
-      SMTP_USER: accounts@southcla.ws # User of SMTP used for authentication (likely email).
+      SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
     volumes:
@@ -94,7 +94,7 @@ services:
       REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
       SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
       SMTP_PORT: "2525" # Port for outgoing SMTP email.
-      SMTP_USER: accounts@southcla.ws # User of SMTP used for authentication (likely email).
+      SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
       SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
       SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
     volumes:
