@@ -70,36 +70,6 @@ services:
     labels:
       - traefik.enable=false
 
-  mail:
-    image: tvial/docker-mailserver:latest
-    hostname: mail
-    domainname: burgershot.gg
-    restart: on-failure
-    ports:
-      - "25:25" # receiving email from other mailservers
-      - "143:143" # StartTLS IMAP client
-      - "587:587" # TLS Client email submission
-      - "993:993" # TLS/SSL IMAP client
-    environment:
-      OVERRIDE_HOSTNAME: burgershot.gg
-      DMS_DEBUG: "1"
-      SMTP_ONLY: "0"
-      SSL_TLS: "false"
-      ENABLE_FAIL2BAN: "1"
-      PERMIT_DOCKER: network
-    volumes:
-      - ${DATA_DIR}/openmp/maildata:/var/mail
-      - ${DATA_DIR}/openmp/mailstate:/var/mail-state
-      - ${DATA_DIR}/openmp/mailconfig/:/tmp/docker-mailserver/
-    cap_add:
-      - NET_ADMIN
-      - SYS_PTRACE
-    networks:
-      - default
-      - databases
-    labels:
-      - traefik.enable=false
-
   discourse:
     image: "bitnami/discourse:2.0.5"
     restart: on-failure
@@ -133,7 +103,6 @@ services:
       - default
       - databases
     depends_on:
-      - mail
       - postgresql
       - redis
     # ports:
