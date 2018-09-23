@@ -1,111 +1,111 @@
 version: "3.5"
 
 networks:
-  default:
-    external:
-      name: gateway
-  databases:
-    driver: bridge
-    internal: true
+    default:
+        external:
+            name: gateway
+    databases:
+        driver: bridge
+        internal: true
 
 services:
-  postgresql:
-    image: "bitnami/postgresql:latest"
-    restart: on-failure
-    environment:
-      POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS}
-      POSTGRESQL_DATABASE: discourse
-    volumes:
-      - "${DATA_DIR}/openmp/postgresql:/bitnami"
-    networks:
-      - databases
-    labels:
-      - traefik.enable=false
+    postgresql:
+        image: "bitnami/postgresql:latest"
+        restart: on-failure
+        environment:
+            POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS}
+            POSTGRESQL_DATABASE: discourse
+        volumes:
+            - "${DATA_DIR}/openmp/postgresql:/bitnami"
+        networks:
+            - databases
+        labels:
+            - traefik.enable=false
 
-  redis:
-    image: "bitnami/redis:latest"
-    restart: on-failure
-    environment:
-      ALLOW_EMPTY_PASSWORD: "no"
-      DISABLE_COMMANDS: "FLUSHDB,FLUSHALL,CONFIG"
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-    volumes:
-      - "${DATA_DIR}/openmp/redis:/bitnami"
-    networks:
-      - databases
-    labels:
-      - traefik.enable=false
+    redis:
+        image: "bitnami/redis:latest"
+        restart: on-failure
+        environment:
+            ALLOW_EMPTY_PASSWORD: "no"
+            DISABLE_COMMANDS: "FLUSHDB,FLUSHALL,CONFIG"
+            REDIS_HOST: redis # Hostname for Redis.
+            REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+            REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
+        volumes:
+            - "${DATA_DIR}/openmp/redis:/bitnami"
+        networks:
+            - databases
+        labels:
+            - traefik.enable=false
 
-  sidekiq:
-    image: "bitnami/discourse:2.0.5"
-    command: "nami start --foreground discourse-sidekiq"
-    restart: on-failure
-    environment:
-      POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
-      POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
-      POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
-      POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
-      DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
-      DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
-      DISCOURSE_HOST: discourse
-      DISCOURSE_PORT: 3000
-      DISCOURSE_HOSTNAME: forum.southcla.ws
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-      SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
-      SMTP_PORT: "2525" # Port for outgoing SMTP email.
-      SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
-      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
-    volumes:
-      - "${DATA_DIR}/openmp/sidekiq:/bitnami"
-    networks:
-      - databases
-    depends_on:
-      - discourse
-    labels:
-      - traefik.enable=false
+    sidekiq:
+        image: "bitnami/discourse:2.0.5"
+        command: "nami start --foreground discourse-sidekiq"
+        restart: on-failure
+        environment:
+            POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
+            POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
+            POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
+            POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
+            DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
+            DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
+            DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
+            DISCOURSE_HOST: discourse
+            DISCOURSE_PORT: 3000
+            DISCOURSE_HOSTNAME: forum.southcla.ws
+            REDIS_HOST: redis # Hostname for Redis.
+            REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+            REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
+            SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
+            SMTP_PORT: "2525" # Port for outgoing SMTP email.
+            SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
+            SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+            SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
+        volumes:
+            - "${DATA_DIR}/openmp/sidekiq:/bitnami"
+        networks:
+            - databases
+        depends_on:
+            - discourse
+        labels:
+            - traefik.enable=false
 
-  discourse:
-    image: "bitnami/discourse:2.0.5"
-    restart: on-failure
-    environment:
-      DISCOURSE_USERNAME: root # Discourse application username.
-      DISCOURSE_PASSWORD: ${DISCOURSE_ROOT_PASS} # Discourse application password.
-      DISCOURSE_EMAIL: admin@southcla.ws # Discourse application email.
-      DISCOURSE_SITENAME: Burger Shot # Discourse site name.
-      DISCOURSE_HOSTNAME: forum.southcla.ws # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
-      POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
-      POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
-      POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
-      POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
-      DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
-      DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
-      DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
-      REDIS_HOST: redis # Hostname for Redis.
-      REDIS_PORT_NUMBER: "6379" # Port used by Redis.
-      REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
-      SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
-      SMTP_PORT: "2525" # Port for outgoing SMTP email.
-      SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
-      SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
-      SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
-    volumes:
-      - "${DATA_DIR}/openmp/discourse:/bitnami"
-    networks:
-      - default
-      - databases
-    depends_on:
-      - postgresql
-      - redis
-    # ports:
-    #   - 80:3000
-    labels:
-      - traefik.docker.network=gateway
-      - "traefik.frontend.rule=Host:forum.southcla.ws"
-      - traefik.frontend.headers.SSLRedirect=false
-      - traefik.port=3000
+    discourse:
+        image: "bitnami/discourse:2.0.5"
+        restart: on-failure
+        environment:
+            DISCOURSE_USERNAME: root # Discourse application username.
+            DISCOURSE_PASSWORD: ${DISCOURSE_ROOT_PASS} # Discourse application password.
+            DISCOURSE_EMAIL: admin@southcla.ws # Discourse application email.
+            DISCOURSE_SITENAME: Burger Shot # Discourse site name.
+            DISCOURSE_HOSTNAME: forum.southcla.ws # Discourse hostname to create application URLs for features such as email notifications and emojis. It can be either an IP or a domain.
+            POSTGRESQL_ROOT_USER: postgres # Root user for the Postgresql database.
+            POSTGRESQL_ROOT_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Root password for Postgresql.
+            POSTGRESQL_HOST: postgresql # Hostname for Postgresql server.
+            POSTGRESQL_PORT_NUMBER: "5432" # Port used by Postgresql server.
+            DISCOURSE_POSTGRESQL_USERNAME: postgres # Discourse application database user. bn_discourse
+            DISCOURSE_POSTGRESQL_PASSWORD: ${DISCOURSE_PG_ROOT_PASS} # Discourse application database password. bitnami1
+            DISCOURSE_POSTGRESQL_NAME: discourse # Discourse application database name. bitnami_application
+            REDIS_HOST: redis # Hostname for Redis.
+            REDIS_PORT_NUMBER: "6379" # Port used by Redis.
+            REDIS_PASSWORD: ${DISCOURSE_REDIS_PASS} # Password for Redis.
+            SMTP_HOST: smtp.elasticemail.com # Host for outgoing SMTP email.
+            SMTP_PORT: "2525" # Port for outgoing SMTP email.
+            SMTP_USER: southclawjk@gmail.com # User of SMTP used for authentication (likely email).
+            SMTP_PASSWORD: ${DISCOURSE_SMTP_PASS} # Password for SMTP.
+            SMTP_TLS: "true" # Whether use TLS protocol for SMTP or not.
+        volumes:
+            - "${DATA_DIR}/openmp/discourse:/bitnami"
+        networks:
+            - default
+            - databases
+        depends_on:
+            - postgresql
+            - redis
+        # ports:
+        #   - 80:3000
+        labels:
+            - traefik.docker.network=gateway
+            - "traefik.frontend.rule=Host:tanuki.southcla.ws"
+            - traefik.frontend.headers.SSLRedirect=false
+            - traefik.port=3000
