@@ -71,7 +71,7 @@ services:
             - traefik.enable=false
 
     discourse:
-        image: "bitnami/discourse:2.0.5"
+        image: "bitnami/discourse:2"
         restart: on-failure
         environment:
             DISCOURSE_USERNAME: root
