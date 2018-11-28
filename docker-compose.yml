@@ -39,7 +39,7 @@ services:
             - traefik.enable=false
 
     sidekiq:
-        image: "bitnami/discourse:2.0.5"
+        image: "bitnami/discourse:2"
         command: "nami start --foreground discourse-sidekiq"
         restart: on-failure
         environment:
