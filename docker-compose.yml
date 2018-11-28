@@ -16,7 +16,7 @@ services:
             POSTGRESQL_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
             POSTGRESQL_DATABASE: discourse
         volumes:
-            - "${DATA_DIR}/openmp/postgresql:/bitnami"
+            - "${DATA_DIR}/burgershot/postgresql:/bitnami"
         networks:
             - databases
         labels:
@@ -32,7 +32,7 @@ services:
             REDIS_PORT_NUMBER: "6379" # Port used by Redis.
             REDIS_PASSWORD: ${REDIS_PASSWORD} # Password for Redis.
         volumes:
-            - "${DATA_DIR}/openmp/redis:/bitnami"
+            - "${DATA_DIR}/burgershot/redis:/bitnami"
         networks:
             - databases
         labels:
@@ -62,7 +62,7 @@ services:
             SMTP_PASSWORD: ${SMTP_PASSWORD}
             SMTP_TLS: "${SMTP_USE_TLS}"
         volumes:
-            - "${DATA_DIR}/openmp/sidekiq:/bitnami"
+            - "${DATA_DIR}/burgershot/sidekiq:/bitnami"
         networks:
             - databases
         depends_on:
@@ -95,7 +95,7 @@ services:
             SMTP_PASSWORD: ${SMTP_PASSWORD}
             SMTP_TLS: "${SMTP_USE_TLS}"
         volumes:
-            - "${DATA_DIR}/openmp/discourse:/bitnami"
+            - "${DATA_DIR}/burgershot/discourse:/bitnami"
         networks:
             - default
             - databases
