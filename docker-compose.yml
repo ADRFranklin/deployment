@@ -20,6 +20,7 @@ services:
             - traefik.docker.network=gateway
             - traefik.frontend.rule=Host:burgershot.gg
             - traefik.frontend.headers.SSLRedirect=false
+            - traefik.port=80
 
     postgresql:
         image: postgres:10.4
