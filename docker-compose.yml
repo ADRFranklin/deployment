@@ -16,6 +16,8 @@ services:
         networks:
             - default
             - database
+        labels:
+            - traefik.enable=false
 
     nginx:
         image: nginx:mainline
