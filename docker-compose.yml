@@ -16,6 +16,10 @@ services:
         networks:
             - default
             - database
+    nginx:
+        image: nginx:mainline
+        volumes:
+            - ${DATA_DIR}/burgershot/mybb:/var/www/html:ro
         labels:
             - traefik.docker.network=gateway
             - traefik.frontend.rule=Host:burgershot.gg
