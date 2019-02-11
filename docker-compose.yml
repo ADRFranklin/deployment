@@ -27,7 +27,7 @@ services:
             - traefik.docker.network=gateway
             - traefik.frontend.rule=Host:burgershot.gg
             - traefik.frontend.headers.SSLRedirect=false
-            - traefik.port=8080
+            - traefik.port=80
         networks:
             - default
 
