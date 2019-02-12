@@ -12,9 +12,8 @@ services:
     mybb:
         image: mybb/mybb:latest
         volumes:
-            - ${DATA_DIR}/burgershot/mybb:/var/www/html
+            - ${DATA_DIR}/burgershot/mybb:/var/www/html:rw
         networks:
-            - default
             - database
         labels:
             - traefik.enable=false
@@ -22,7 +21,7 @@ services:
     nginx:
         image: nginx:mainline
         volumes:
-            - ${DATA_DIR}/burgershot/mybb:/var/www/html:ro
+            - ${DATA_DIR}/burgershot/mybb:/usr/share/nginx/html:ro
         labels:
             - traefik.docker.network=gateway
             - traefik.frontend.rule=Host:burgershot.gg
