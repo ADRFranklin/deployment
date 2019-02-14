@@ -23,7 +23,7 @@ services:
         image: nginx:mainline
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
-            - ${DATA_DIR}/burgershot/mybb:/usr/share/nginx/html:ro
+            - ${DATA_DIR}/burgershot/mybb:/var/www/html:ro
         labels:
             - traefik.docker.network=gateway
             - traefik.frontend.rule=Host:burgershot.gg
