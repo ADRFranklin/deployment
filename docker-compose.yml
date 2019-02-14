@@ -13,8 +13,6 @@ services:
         image: mybb/mybb:latest
         volumes:
             - ${DATA_DIR}/burgershot/mybb:/var/www/html:rw
-        ports:
-            - 9000:9000
         networks:
             - database
             - default
