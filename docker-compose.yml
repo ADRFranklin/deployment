@@ -21,7 +21,8 @@ services:
             - traefik.frontend.headers.SSLHost=openmp.burgershot.gg
             - traefik.frontend.redirect.regex=^https?://[a-z0-9.]+/(.*)
             - traefik.frontend.redirect.replacement=https://openmp.burgershot.gg/$${1}
-            - traefik.port=80
+            - traefik.port=3000
+            - com.centurylinklabs.watchtower.enable=true
 
     mybb:
         image: mybb/mybb:latest
