@@ -26,8 +26,11 @@ services:
             - ${DATA_DIR}/burgershot/mybb:/var/www/html:ro
         labels:
             - traefik.docker.network=gateway
-            - traefik.frontend.rule=Host:burgershot.gg
-            # - traefik.frontend.headers.SSLRedirect=true
+            - traefik.frontend.rule=Host:www.burgershot.gg,burgershot.gg
+            - traefik.frontend.headers.SSLRedirect=true
+            - traefik.frontend.headers.SSLHost=www.burgershot.gg
+            - traefik.frontend.redirect.regex=^https?://[a-z0-9.]+/(.*)
+            - traefik.frontend.redirect.replacement=https://www.burgershot.gg/$${1}
             - traefik.port=80
         networks:
             - default
