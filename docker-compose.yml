@@ -43,6 +43,7 @@ services:
 
     mybb:
         image: mybb/mybb:latest
+        restart: on-failure
         volumes:
             - ${DATA_DIR}/burgershot/mybb:/var/www/html:rw
         networks:
