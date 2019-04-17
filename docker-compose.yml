@@ -11,6 +11,7 @@ networks:
 services:
     homepage:
         image: southclaws/openmp:latest
+        restart: on-failure
         networks:
             - default
         labels:
@@ -26,6 +27,7 @@ services:
 
     wiki:
         image: southclaws/openmp-wiki:latest
+        restart: on-failure
         networks:
             - default
         labels:
@@ -51,6 +53,7 @@ services:
 
     nginx:
         image: nginx:mainline
+        restart: on-failure
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
             - ${DATA_DIR}/burgershot/mybb:/var/www/html:ro
@@ -68,6 +71,7 @@ services:
 
     postgresql:
         image: postgres:10.4
+        restart: on-failure
         environment:
             POSTGRES_DB: burgershot
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
